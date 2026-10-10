@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SENSI-CORE · Calibrador de sensibilidad Free Fire</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Rajdhani:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05060f;--bg2:#0b0e22;--ink:#e8f6ff;--mute:#8aa0c2;--cy:#3df2ff;--mg:#ff2e9a;--am:#ffb23d;--line:#1d2a55;
+--d:'Orbitron','Trebuchet MS',sans-serif;--b:'Rajdhani','Segoe UI',Roboto,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#eef4ff;--bg2:#fff;--ink:#0a1230;--mute:#4a5f86;--cy:#0079c9;--mg:#c4106f;--am:#a86400;--line:#b9c8ea}}
+:root[data-theme="light"]{--bg:#eef4ff;--bg2:#fff;--ink:#0a1230;--mute:#4a5f86;--cy:#0079c9;--mg:#c4106f;--am:#a86400;--line:#b9c8ea}
+:root[data-theme="dark"]{--bg:#05060f;--bg2:#0b0e22;--ink:#e8f6ff}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 17px/1.45 var(--b);
+background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:44px 44px;background-position:-1px -1px}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0,transparent 0,var(--bg) 75%);pointer-events:none}
+main{position:relative;max-width:720px;margin:0 auto;padding:20px 16px 60px}
+h1{font:800 clamp(30px,9vw,52px)/1 var(--d);margin:8px 0 6px;letter-spacing:.02em}
+h1 span{color:var(--cy);text-shadow:0 0 18px var(--cy)}
+h2{font:800 15px var(--d);letter-spacing:.08em;margin:34px 0 12px;color:var(--cy)}
+.sub{color:var(--mute);margin:0 0 6px;max-width:46ch}
+.panel{background:color-mix(in srgb,var(--bg2) 88%,transparent);border:1px solid var(--line);border-radius:4px 18px 4px 18px;padding:14px;position:relative}
+.panel::after{content:"";position:absolute;top:-1px;left:-1px;width:26px;height:26px;border-top:2px solid var(--cy);border-left:2px solid var(--cy)}
+/* reticle */
+.dial{display:grid;place-items:center;margin:6px 0 0}
+.dial svg{width:min(88vw,340px);height:auto;overflow:visible}
+.ring{transition:stroke-dasharray .7s cubic-bezier(.2,.8,.2,1)}
+.sweep{transform-origin:160px 160px;animation:spin 5s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.big{font:800 62px var(--d);fill:var(--ink)}
+.cap{font:600 13px var(--b);fill:var(--mute);letter-spacing:.2em}
+/* controls */
+.grp{margin:0 0 14px}
+.grp>b{display:block;font:600 14px var(--b);color:var(--mute);margin-bottom:6px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button,.btn{font:700 15px var(--b);color:var(--ink);background:transparent;border:1px solid var(--line);padding:10px 14px;border-radius:3px 12px 3px 12px;cursor:pointer;min-height:44px}
+.seg button[aria-pressed=true]{background:var(--cy);color:#02121a;border-color:var(--cy);box-shadow:0 0 16px color-mix(in srgb,var(--cy) 55%,transparent)}
+.btn.hot{border-color:var(--mg);color:var(--mg)}
+button:focus-visible,.pad:focus-visible{outline:2px solid var(--am);outline-offset:2px}
+input[type=range]{width:100%;accent-color:var(--cy);height:36px}
+#dpiBox{display:none}#dpiBox.on{display:block}
+.note{font-size:15px;color:var(--mute);margin:8px 0 0}
+/* bars */
+.row{display:grid;grid-template-columns:104px 1fr 44px;align-items:center;gap:10px;margin:11px 0}
+.row i{font-style:normal;font:600 16px var(--b)}
+.track{height:10px;background:var(--line);border-radius:2px;overflow:hidden;position:relative}
+.track u{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,var(--cy),var(--mg));box-shadow:0 0 12px var(--cy);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.row output{font:800 17px var(--d);text-align:right}
+.scale{display:flex;justify-content:space-between;color:var(--mute);font-size:13px;margin:-2px 54px 0 114px}
+/* table */
+.wrap{overflow-x:auto;border:1px solid var(--line);border-radius:4px}
+table{border-collapse:collapse;width:100%;min-width:480px;font-size:16px}
+th,td{padding:9px 10px;text-align:center;border-bottom:1px solid var(--line)}
+th{font:800 12px var(--d);color:var(--cy)}
+td:first-child,th:first-child{text-align:left}
+tr.sep td{color:var(--am);font:800 12px var(--d);text-align:left;background:color-mix(in srgb,var(--am) 9%,transparent)}
+tr.me td{background:color-mix(in srgb,var(--cy) 14%,transparent)}
+/* pad */
+.pad{height:150px;border:1px dashed var(--cy);border-radius:4px 18px 4px 18px;position:relative;touch-action:none;overflow:hidden;user-select:none;display:grid;place-items:center;color:var(--mute);text-align:center;padding:10px}
+.goal{position:absolute;top:0;bottom:0;border-left:2px solid var(--mg);border-right:2px solid var(--mg);left:50%;background:color-mix(in srgb,var(--mg) 12%,transparent);transform:translateX(-50%);transition:width .4s}
+.pad span{position:relative}
+.res{font:800 18px var(--d);margin:10px 0 0;min-height:26px}
+ol{padding-left:20px;margin:0}li{margin:7px 0}
+.warn{border-left:3px solid var(--am);padding:6px 12px;margin:12px 0 0;color:var(--mute);font-size:15px}
+.tag{display:inline-block;color:var(--am);font:800 12px var(--d)}
+@media(prefers-reduced-motion:reduce){.sweep{animation:none}.ring,.track u,.goal{transition:none}}
+
+#key{width:100%;font:600 17px var(--b);color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:3px 12px 3px 12px;padding:12px;margin:6px 0 10px}
+#key:focus-visible{outline:2px solid var(--am)}
+#chip{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);right:10px;z-index:9;font:800 13px var(--d);color:var(--cy);border:1px solid var(--cy);background:var(--bg2);padding:6px 10px;border-radius:3px 10px 3px 10px}
+</style>
+</head>
+<body>
+<section id="gate" hidden style="position:relative;max-width:720px;margin:0 auto;padding:20px 16px 60px">
+<h1>SENSI<span>-CORE</span></h1>
+<p class="sub">Acceso con key. Cada key te da 5 minutos.</p>
+<h2>DESBLOQUEAR</h2>
+<div class="panel">
+<ol><li>Pasa los pasos del acortador y copia tu key.</li><li>Pégala aquí y toca Desbloquear.</li></ol>
+<p><a class="btn hot" href="https://blacklink.site/rk9ipu" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;line-height:22px">Pasar el acortador</a></p>
+<input id="key" type="text" placeholder="Pega tu key aquí" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Tu key">
+<button class="btn" id="unl">Desbloquear</button>
+<p class="res" id="gm" role="status"></p>
+</div></section>
+<main id="app" hidden>
+<h1>SENSI<span>-CORE</span></h1>
+<p class="sub">Calibrador de sensibilidad para Free Fire. Escala completa de 0 a 200, con y sin DPI.</p>
+
+<section class="dial" aria-label="Sensibilidad general">
+<svg viewBox="0 0 320 320" role="img" aria-label="Dial de sensibilidad general">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--cy)"/><stop offset="1" stop-color="var(--mg)"/></linearGradient>
+<linearGradient id="sw" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--cy)" stop-opacity="0"/><stop offset="1" stop-color="var(--cy)" stop-opacity=".55"/></linearGradient></defs>
+<circle cx="160" cy="160" r="148" fill="none" stroke="var(--line)" stroke-width="1"/>
+<circle cx="160" cy="160" r="136" fill="none" stroke="var(--mute)" stroke-width="10" stroke-dasharray="1 8.35" pathLength="200" transform="rotate(-90 160 160)" opacity=".5"/>
+<circle cx="160" cy="160" r="120" fill="none" stroke="var(--line)" stroke-width="10" transform="rotate(-90 160 160)"/>
+<circle id="ring" class="ring" cx="160" cy="160" r="120" fill="none" stroke="url(#g)" stroke-width="10" stroke-linecap="butt" pathLength="200" stroke-dasharray="0 200" transform="rotate(-90 160 160)" style="filter:drop-shadow(0 0 8px var(--cy))"/>
+<g class="sweep"><path d="M160 160 L160 52 A108 108 0 0 1 252 106 Z" fill="url(#sw)" opacity=".35"/><line x1="160" y1="160" x2="160" y2="52" stroke="var(--cy)" stroke-width="1.5"/></g>
+<path d="M160 20v26M160 274v26M20 160h26M274 160h26" stroke="var(--mg)" stroke-width="2"/>
+<text x="160" y="176" text-anchor="middle" class="big" id="bigN">0</text>
+<text x="160" y="204" text-anchor="middle" class="cap">GENERAL / 200</text>
+</svg>
+</section>
+
+<h2>PARÁMETROS</h2>
+<section class="panel">
+<div class="grp"><b>Nivel de sensibilidad</b><div class="seg" data-k="lv">
+<button data-v="baja">Baja</button><button data-v="media">Media</button><button data-v="alta">Alta</button><button data-v="extrema">Extrema</button></div></div>
+<div class="grp"><b>Estilo de juego</b><div class="seg" data-k="sty">
+<button data-v="rusher">Rusher</button><button data-v="balanceado">Balanceado</button><button data-v="franco">Francotirador</button></div></div>
+<div class="grp"><b>Modo de pantalla</b><div class="seg" data-k="dpi">
+<button data-v="0">Sin DPI</button><button data-v="1">Con DPI</button></div>
+<p class="note">Sin DPI usa la densidad original de tu teléfono. Con DPI compensa una densidad cambiada.</p></div>
+<div id="dpiBox" class="grp"><b>DPI de pantalla: <span id="dpiV">420</span></b>
+<input id="dpi" type="range" min="280" max="640" step="10" value="420" aria-label="DPI de pantalla">
+<button class="btn" id="det">Detectar mi pantalla</button></div>
+</section>
+
+<h2>TUS VALORES</h2>
+<section class="panel" id="bars" aria-live="polite"></section>
+<p class="note">Ingrésalos en Ajustes › Sensibilidad. Son un punto de partida: en el entrenamiento ajusta de 5 en 5.</p>
+<p style="margin:12px 0 0"><button class="btn hot" id="cp">Copiar valores</button> <span id="cpm" class="note"></span></p>
+
+<h2>TABLA COMPLETA</h2>
+<div class="wrap"><table id="tb"></table></div>
+
+<h2>PRUEBA DE BARRIDO</h2>
+<section class="panel">
+<p class="sub" style="margin-top:0">Para tu nivel, un giro de 180° debería necesitar un barrido de <b id="gp">60%</b> del ancho. Practica la distancia en la zona magenta.</p>
+<div class="pad" id="pad" tabindex="0" role="application" aria-label="Zona de práctica de barrido"><div class="goal" id="goal"></div><span>Desliza el pulgar aquí</span></div>
+<p class="res" id="res">Esperando barrido…</p>
+</section>
+
+<h2>CÓMO APLICARLO</h2>
+<section class="panel">
+<ol>
+<li>Abre Free Fire › Ajustes › Sensibilidad y escribe los seis valores.</li>
+<li>Entra al campo de entrenamiento y haz un giro de 180° con un solo barrido.</li>
+<li>Si necesitas más recorrido que el objetivo, sube 5. Si te pasas de giro, baja 5.</li>
+<li>Repite con punto rojo, 2x, 4x y AWM hasta que apuntes sin corregir.</li>
+</ol>
+<p class="warn"><span class="tag">DPI</span> Cambiar el DPI altera el tamaño de toda la interfaz del teléfono (Opciones de desarrollador › Ancho mínimo). Anota tu valor original para poder volver. El efecto en la sensibilidad varía por equipo, por eso el cálculo es una estimación.</p>
+</section>
+</main>
+<script>
+const N=["General","Punto rojo","Mira 2x","Mira 4x","Mira AWM","Cámara libre"];
+const B={baja:[80,75,70,65,55,80],media:[120,115,105,95,80,115],alta:[165,160,150,140,115,155],extrema:[195,190,180,170,140,185]};
+const S={rusher:[1.06,1.06,1,.95,.9,1.04],balanceado:[1,1,1,1,1,1],franco:[.92,.92,.95,.97,.95,.92]};
+const T={baja:.9,media:.6,alta:.4,extrema:.28};
+const L={baja:"Baja",media:"Media",alta:"Alta",extrema:"Extrema"};
+const st={lv:"media",sty:"balanceado",dpi:"0",val:420,stock:420};
+const $=id=>document.getElementById(id);
+function calc(lv,sty,use,d){const f=use?Math.pow(d/st.stock,.6):1;return B[lv].map((v,i)=>Math.max(1,Math.min(200,Math.round(v*S[sty][i]*f))))}
+function cur(){return calc(st.lv,st.sty,st.dpi==="1",st.val)}
+function render(){
+ document.querySelectorAll(".seg").forEach(s=>s.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(st[s.dataset.k]===b.dataset.v))));
+ $("dpiBox").classList.toggle("on",st.dpi==="1");$("dpiV").textContent=st.val;
+ const v=cur();
+ $("ring").setAttribute("stroke-dasharray",v[0]+" 200");$("bigN").textContent=v[0];
+ $("bars").innerHTML=v.map((x,i)=>`<div class="row"><i>${N[i]}</i><div class="track"><u style="width:${x/2}%"></u></div><output>${x}</output></div>`).join("")+`<div class="scale"><span>0</span><span>100</span><span>200</span></div>`;
+ let h="<tr><th>Nivel</th><th>Gen</th><th>Rojo</th><th>2x</th><th>4x</th><th>AWM</th><th>Libre</th></tr>";
+ [["SIN DPI",0],["CON DPI · "+st.val,1]].forEach(([t,u])=>{h+=`<tr class="sep"><td colspan="7">${t}</td></tr>`;
+  Object.keys(B).forEach(l=>{h+=`<tr class="${l===st.lv&&String(u)===st.dpi?"me":""}"><td>${L[l]}</td>`+calc(l,st.sty,u,st.val).map(n=>`<td>${n}</td>`).join("")+"</tr>"})});
+ $("tb").innerHTML=h;
+ const g=T[st.lv];$("gp").textContent=Math.round(g*100)+"%";$("goal").style.width=g*100+"%";
+}
+document.querySelectorAll(".seg").forEach(s=>s.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;st[s.dataset.k]=b.dataset.v;render()}));
+$("dpi").addEventListener("input",e=>{st.val=+e.target.value;render()});
+$("det").addEventListener("click",()=>{const d=Math.round((window.devicePixelRatio||2.6)*160/10)*10;st.stock=d;st.val=d;$("dpi").value=Math.min(640,Math.max(280,d));render()});
+$("cp").addEventListener("click",async()=>{const v=cur();const t="Free Fire · "+L[st.lv]+" · "+st.sty+(st.dpi==="1"?" · DPI "+st.val:" · sin DPI")+"\n"+N.map((n,i)=>n+": "+v[i]).join("\n");
+ try{await navigator.clipboard.writeText(t);$("cpm").textContent="Copiado."}catch(e){$("cpm").textContent="No se pudo copiar. Anótalos desde la lista."}});
+const pad=$("pad");let x0=null;
+pad.addEventListener("pointerdown",e=>{x0=e.clientX;try{pad.setPointerCapture(e.pointerId)}catch(_){}$("res").textContent="Midiendo…"});
+pad.addEventListener("pointerup",e=>{if(x0===null)return;const w=pad.getBoundingClientRect().width,f=Math.abs(e.clientX-x0)/w,g=T[st.lv];x0=null;
+ const r=f/g,m=Math.round(f*100)+"% · objetivo "+Math.round(g*100)+"%";
+ $("res").textContent=(r<.85?"Corto · ":r>1.15?"Largo · ":"Ideal · ")+m;
+ $("res").style.color=r<.85||r>1.15?"var(--am)":"var(--cy)"});
+pad.addEventListener("pointercancel",()=>{x0=null});
+const d0=Math.round((window.devicePixelRatio||2.6)*160/10)*10;st.stock=d0;st.val=d0;$("dpi").value=Math.min(640,Math.max(280,d0));
+render();
+</script>
+<div id="chip" hidden></div>
+<script>(()=>{
+const VERIFY_URL="PEGA_AQUI_LA_DIRECCION_DE_VERIFICACION";
+const SECS=300,SK="sc_session",UK="sc_used";
+const g=id=>document.getElementById(id);
+const app=document.getElementById("app"),gate=g("gate"),chip=g("chip");
+let tm=null;
+const ls={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
+function lock(msg){clearInterval(tm);ls.del(SK);app.hidden=true;chip.hidden=true;gate.hidden=false;g("gm").textContent=msg||""}
+function open(s){gate.hidden=true;app.hidden=false;chip.hidden=false;clearInterval(tm);
+ const tick=()=>{const left=Math.ceil((s.t+SECS*1000-Date.now())/1000);
+  if(left<=0){lock("Se acabaron tus 5 minutos. Pasa el acortador otra vez para tener una key nueva.");return}
+  chip.textContent="ACCESO "+String(Math.floor(left/60)).padStart(2,"0")+":"+String(left%60).padStart(2,"0")};
+ tm=setInterval(tick,1000);tick()}
+g("unl").addEventListener("click",async()=>{
+ const m=g("gm"),k=g("key").value.trim();
+ if(!k){m.textContent="Pega tu key primero.";return}
+ if(VERIFY_URL.indexOf("PEGA_")===0){m.textContent="Falta configurar la dirección de verificación.";return}
+ const used=ls.get(UK)||[];
+ if(used.indexOf(k)>-1){m.textContent="Esa key ya se usó. Pasa el acortador para tener otra.";return}
+ m.textContent="Verificando…";
+ try{
+  const r=await fetch(VERIFY_URL.replace("LA_LLAVE",encodeURIComponent(k)),{cache:"no-store"});
+  const j=await r.json();
+  if(j.valida===true||j.valid===true){used.push(k);ls.set(UK,used);const s={t:Date.now()};ls.set(SK,s);g("key").value="";m.textContent="";open(s)}
+  else m.textContent="Key inválida o vencida."
+ }catch(e){m.textContent="No se pudo verificar. Revisa tu internet e intenta otra vez."}
+});
+const s0=ls.get(SK);
+if(s0&&Date.now()-s0.t<SECS*1000)open(s0);else lock(s0?"Se acabaron tus 5 minutos. Pasa el acortador otra vez para tener una key nueva.":"");
+})();</script>
+</body>
+</html>
