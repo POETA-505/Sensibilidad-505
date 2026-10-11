@@ -71,6 +71,14 @@ ol{padding-left:20px;margin:0}li{margin:7px 0}
 #key{width:100%;font:600 17px var(--b);color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:3px 12px 3px 12px;padding:12px;margin:6px 0 10px}
 #key:focus-visible{outline:2px solid var(--am)}
 #chip{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);right:10px;z-index:9;font:800 13px var(--d);color:var(--cy);border:1px solid var(--cy);background:var(--bg2);padding:6px 10px;border-radius:3px 10px 3px 10px}
+.srch{position:relative;margin:6px 0 8px}.srch svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;stroke:var(--cy);fill:none;stroke-width:2.2;pointer-events:none}
+#dq,#db{width:100%;font:600 17px var(--b);color:var(--ink);background:var(--bg2);border:1px solid var(--line);border-radius:3px 12px 3px 12px;padding:12px;-webkit-appearance:none;appearance:none}
+#dq{padding-left:42px}#db{margin-bottom:8px}
+#dq:focus-visible,#db:focus-visible{outline:2px solid var(--am)}
+.dl{max-height:240px;overflow-y:auto;border:1px solid var(--line);border-radius:4px;margin-bottom:8px}
+.dl button{display:flex;justify-content:space-between;gap:8px;width:100%;text-align:left;font:600 16px var(--b);color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--line);padding:10px 12px;min-height:44px;cursor:pointer}
+.dl button small{color:var(--mute);white-space:nowrap}
+.dl p{padding:10px 12px;margin:0;color:var(--mute)}
 </style>
 </head>
 <body>
@@ -106,6 +114,12 @@ ol{padding-left:20px;margin:0}li{margin:7px 0}
 
 <h2>PARÁMETROS</h2>
 <section class="panel">
+<div class="grp"><b>Tu celular</b>
+<div class="srch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg><input id="dq" type="search" placeholder="Busca tu modelo: G72, Note 12, A15…" autocomplete="off" aria-label="Buscar celular"></div>
+<select id="db" aria-label="Marca"><option value="">Todas las marcas</option></select>
+<div id="dl" class="dl" hidden></div>
+<p id="dsel" class="note">Elige tu modelo para ajustar los valores a tu pantalla y procesador.</p>
+<button class="btn" id="dx" hidden>Quitar celular</button></div>
 <div class="grp"><b>Nivel de sensibilidad</b><div class="seg" data-k="lv">
 <button data-v="baja">Baja</button><button data-v="media">Media</button><button data-v="alta">Alta</button><button data-v="extrema">Extrema</button></div></div>
 <div class="grp"><b>Estilo de juego</b><div class="seg" data-k="sty">
@@ -144,6 +158,7 @@ ol{padding-left:20px;margin:0}li{margin:7px 0}
 <p class="warn"><span class="tag">DPI</span> Cambiar el DPI altera el tamaño de toda la interfaz del teléfono (Opciones de desarrollador › Ancho mínimo). Anota tu valor original para poder volver. El efecto en la sensibilidad varía por equipo, por eso el cálculo es una estimación.</p>
 </section>
 </main>
+<script src="modelos.js"></script>
 <script>
 const N=["General","Punto rojo","Mira 2x","Mira 4x","Mira AWM","Cámara libre"];
 const B={baja:[80,75,70,65,55,80],media:[120,115,105,95,80,115],alta:[165,160,150,140,115,155],extrema:[195,190,180,170,140,185]};
@@ -152,7 +167,7 @@ const T={baja:.9,media:.6,alta:.4,extrema:.28};
 const L={baja:"Baja",media:"Media",alta:"Alta",extrema:"Extrema"};
 const st={lv:"media",sty:"balanceado",dpi:"0",val:420,stock:420};
 const $=id=>document.getElementById(id);
-function calc(lv,sty,use,d){const f=use?Math.pow(d/st.stock,.6):1;return B[lv].map((v,i)=>Math.max(1,Math.min(200,Math.round(v*S[sty][i]*f))))}
+function calc(lv,sty,use,d){const f=use?Math.pow(d/st.stock,.6):1;return B[lv].map((v,i)=>Math.max(1,Math.min(200,Math.round(v*S[sty][i]*f*(st.devF||1)))))}
 function cur(){return calc(st.lv,st.sty,st.dpi==="1",st.val)}
 function render(){
  document.querySelectorAll(".seg").forEach(s=>s.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(st[s.dataset.k]===b.dataset.v))));
@@ -169,7 +184,7 @@ function render(){
 document.querySelectorAll(".seg").forEach(s=>s.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;st[s.dataset.k]=b.dataset.v;render()}));
 $("dpi").addEventListener("input",e=>{st.val=+e.target.value;render()});
 $("det").addEventListener("click",()=>{const d=Math.round((window.devicePixelRatio||2.6)*160/10)*10;st.stock=d;st.val=d;$("dpi").value=Math.min(640,Math.max(280,d));render()});
-$("cp").addEventListener("click",async()=>{const v=cur();const t="Free Fire · "+L[st.lv]+" · "+st.sty+(st.dpi==="1"?" · DPI "+st.val:" · sin DPI")+"\n"+N.map((n,i)=>n+": "+v[i]).join("\n");
+$("cp").addEventListener("click",async()=>{const v=cur();const t="Free Fire · "+(st.dev?st.dev.n+" · ":"")+L[st.lv]+" · "+st.sty+(st.dpi==="1"?" · DPI "+st.val:" · sin DPI")+"\n"+N.map((n,i)=>n+": "+v[i]).join("\n");
  try{await navigator.clipboard.writeText(t);$("cpm").textContent="Copiado."}catch(e){$("cpm").textContent="No se pudo copiar. Anótalos desde la lista."}});
 const pad=$("pad");let x0=null;
 pad.addEventListener("pointerdown",e=>{x0=e.clientX;try{pad.setPointerCapture(e.pointerId)}catch(_){}$("res").textContent="Midiendo…"});
@@ -181,6 +196,31 @@ pad.addEventListener("pointercancel",()=>{x0=null});
 const d0=Math.round((window.devicePixelRatio||2.6)*160/10)*10;st.stock=d0;st.val=d0;$("dpi").value=Math.min(640,Math.max(280,d0));
 render();
 </script>
+<script>(()=>{
+const M=window.MODELOS||{},A=[];
+const nz=s=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9+]/g,"");
+for(const b in M){const p=M[b][0];M[b][1].split("|").forEach(e=>{const q=e.split(",");A.push({b,n:(p+q[0]).trim(),t:+q[1],h:+q[2],z:+(q[3]||1),k:nz(b+" "+p+q[0])})})}
+const G=["","gama baja","gama media","gama media-alta","gama alta"];
+const F=d=>Math.max(.85,Math.min(1.15,(d.h<=60?1.05:d.h<=90?1:d.h<=120?.97:.95)*[0,1.05,1.02,1,.98][d.t]*d.z));
+const dq=$("dq"),db=$("db"),dl=$("dl");
+Object.keys(M).forEach(b=>{const o=document.createElement("option");o.value=b;o.textContent=b;db.appendChild(o)});
+function list(){
+ const toks=dq.value.split(/\s+/).map(nz).filter(Boolean),b=db.value;
+ if(!toks.length&&!b){dl.hidden=true;return}
+ const r=[];for(let i=0;i<A.length&&r.length<60;i++){const d=A[i];if(b&&d.b!==b)continue;if(toks.every(t=>d.k.includes(t)))r.push(i)}
+ dl.hidden=false;
+ dl.innerHTML=r.length?r.map(i=>`<button data-i="${i}">${A[i].n}<small>${A[i].h} Hz</small></button>`).join(""):"<p>No lo encontré. Prueba con menos letras o elige «Otro / no está».</p>";
+}
+function pick(d){
+ st.dev=d;st.devF=d?F(d):1;
+ $("dsel").textContent=d?d.n+" · "+d.h+" Hz · "+G[d.t]+". Valores ajustados a tu equipo (estimación).":"Elige tu modelo para ajustar los valores a tu pantalla y procesador.";
+ $("dx").hidden=!d;dl.hidden=true;if(d){dq.value="";db.value=""}
+ render();
+}
+dq.addEventListener("input",list);db.addEventListener("change",list);
+dl.addEventListener("click",e=>{const b=e.target.closest("button");if(b)pick(A[+b.dataset.i])});
+$("dx").addEventListener("click",()=>pick(null));
+})();</script>
 <script src="config.js"></script>
 <script>window.addEventListener("error",function(e){var m=document.getElementById("gm");if(m){m.style.color="#ffb23d";m.textContent="Error en la página: "+(e.message||"desconocido")}});</script>
 <div id="chip" hidden></div>
@@ -190,7 +230,7 @@ const SECS=300,SK="sc_session",UK="sc_used";
 const g=id=>document.getElementById(id);
 const app=document.getElementById("app"),gate=g("gate"),chip=g("chip");
 let tm=null;
-const OWNER="e9e7c8d6241c36cbeda4156d94614b0385cf4ef663af87eaa7e7cd6ca288f15e";
+const OWNER="84bc5f562ad762578a250700e1c4d478ee762cea1829accfc0ca9275448ac51d";
 async function isOwner(k){try{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(k.toLowerCase()));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,"0")).join("")===OWNER}catch(e){return false}}
 function openOwner(){clearInterval(tm);gate.hidden=true;app.hidden=false;chip.hidden=false;chip.textContent="MODO CREADOR"}
 const ls={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
