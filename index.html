@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>SENSI-CORE · Calibrador de sensibilidad Free Fire</title>
+<title>SENSI-CORE · Sensibilidad Free Fire</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;800&family=Rajdhani:wght@500;600&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#05060f;--bg2:#0b0e22;--ink:#e8f6ff;--mute:#8aa0c2;--cy:#3df2ff;--mg:#ff2e9a;--am:#ffb23d;--line:#1d2a55;
@@ -71,14 +71,22 @@ ol{padding-left:20px;margin:0}li{margin:7px 0}
 #key{width:100%;font:600 17px var(--b);color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:3px 12px 3px 12px;padding:12px;margin:6px 0 10px}
 #key:focus-visible{outline:2px solid var(--am)}
 #chip{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);right:10px;z-index:9;font:800 13px var(--d);color:var(--cy);border:1px solid var(--cy);background:var(--bg2);padding:6px 10px;border-radius:3px 10px 3px 10px}
-.srch{position:relative;margin:6px 0 8px}.srch svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:20px;height:20px;stroke:var(--cy);fill:none;stroke-width:2.2;pointer-events:none}
-#dq,#db{width:100%;font:600 17px var(--b);color:var(--ink);background:var(--bg2);border:1px solid var(--line);border-radius:3px 12px 3px 12px;padding:12px;-webkit-appearance:none;appearance:none}
-#dq{padding-left:42px}#db{margin-bottom:8px}
-#dq:focus-visible,#db:focus-visible{outline:2px solid var(--am)}
-.dl{max-height:240px;overflow-y:auto;border:1px solid var(--line);border-radius:4px;margin-bottom:8px}
-.dl button{display:flex;justify-content:space-between;gap:8px;width:100%;text-align:left;font:600 16px var(--b);color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--line);padding:10px 12px;min-height:44px;cursor:pointer}
-.dl button small{color:var(--mute);white-space:nowrap}
-.dl p{padding:10px 12px;margin:0;color:var(--mute)}
+
+.inp{width:100%;font:600 17px var(--b);color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:3px 12px 3px 12px;padding:12px;margin:0 0 8px}
+select.inp{background:var(--bg2)}
+.inp:focus-visible,#cp:focus-visible{outline:2px solid var(--am)}
+.sg{display:grid;gap:6px;margin-bottom:8px}
+.sg button{text-align:left;font:600 16px var(--b);color:var(--ink);background:transparent;border:1px solid var(--line);padding:10px 12px;border-radius:3px 12px 3px 12px;min-height:44px;cursor:pointer}
+details{margin:12px 0}summary{cursor:pointer;color:var(--cy);font:600 15px var(--b);min-height:32px}
+li{font-size:15px}
+label{display:block;margin:6px 0;color:var(--mute)}
+.fab{position:fixed;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);z-index:8;font:800 13px var(--d);color:#02121a;background:var(--cy);border:0;border-radius:3px 14px 3px 14px;padding:14px 16px;min-height:44px;box-shadow:0 0 18px color-mix(in srgb,var(--cy) 50%,transparent)}
+#bot{position:fixed;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 74px);max-width:520px;margin:0 auto;z-index:8}
+#bot[hidden]{display:none}
+#lg{display:flex;flex-direction:column;gap:8px;max-height:40vh;overflow:auto;margin-bottom:8px}
+.b{padding:8px 10px;border:1px solid var(--line);border-radius:3px 12px 3px 12px;font-size:16px}
+.b.u{border-color:var(--cy);align-self:flex-end}
+.b button{display:block;margin-top:6px}
 </style>
 </head>
 <body>
@@ -95,142 +103,132 @@ ol{padding-left:20px;margin:0}li{margin:7px 0}
 </div></section>
 <main id="app" hidden>
 <h1>SENSI<span>-CORE</span></h1>
-<p class="sub">Calibrador de sensibilidad para Free Fire. Escala completa de 0 a 200, con y sin DPI.</p>
-
-<section class="dial" aria-label="Sensibilidad general">
-<svg viewBox="0 0 320 320" role="img" aria-label="Dial de sensibilidad general">
-<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--cy)"/><stop offset="1" stop-color="var(--mg)"/></linearGradient>
-<linearGradient id="sw" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--cy)" stop-opacity="0"/><stop offset="1" stop-color="var(--cy)" stop-opacity=".55"/></linearGradient></defs>
-<circle cx="160" cy="160" r="148" fill="none" stroke="var(--line)" stroke-width="1"/>
-<circle cx="160" cy="160" r="136" fill="none" stroke="var(--mute)" stroke-width="10" stroke-dasharray="1 8.35" pathLength="200" transform="rotate(-90 160 160)" opacity=".5"/>
-<circle cx="160" cy="160" r="120" fill="none" stroke="var(--line)" stroke-width="10" transform="rotate(-90 160 160)"/>
-<circle id="ring" class="ring" cx="160" cy="160" r="120" fill="none" stroke="url(#g)" stroke-width="10" stroke-linecap="butt" pathLength="200" stroke-dasharray="0 200" transform="rotate(-90 160 160)" style="filter:drop-shadow(0 0 8px var(--cy))"/>
-<g class="sweep"><path d="M160 160 L160 52 A108 108 0 0 1 252 106 Z" fill="url(#sw)" opacity=".35"/><line x1="160" y1="160" x2="160" y2="52" stroke="var(--cy)" stroke-width="1.5"/></g>
-<path d="M160 20v26M160 274v26M20 160h26M274 160h26" stroke="var(--mg)" stroke-width="2"/>
-<text x="160" y="176" text-anchor="middle" class="big" id="bigN">0</text>
-<text x="160" y="204" text-anchor="middle" class="cap">GENERAL / 200</text>
-</svg>
-</section>
-
-<h2>PARÁMETROS</h2>
+<p class="sub">Recomendador de sensibilidad para Free Fire (0–200). Parte de reglas claras y se afina con tus pruebas.</p>
+<h2>1 · TU TELÉFONO</h2>
 <section class="panel">
-<div class="grp"><b>Tu celular</b>
-<div class="srch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg><input id="dq" type="search" placeholder="Busca tu modelo: G72, Note 12, A15…" autocomplete="off" aria-label="Buscar celular"></div>
-<select id="db" aria-label="Marca"><option value="">Todas las marcas</option></select>
-<div id="dl" class="dl" hidden></div>
-<p id="dsel" class="note">Elige tu modelo para ajustar los valores a tu pantalla y procesador.</p>
-<button class="btn" id="dx" hidden>Quitar celular</button></div>
-<div class="grp"><b>Nivel de sensibilidad</b><div class="seg" data-k="lv">
-<button data-v="baja">Baja</button><button data-v="media">Media</button><button data-v="alta">Alta</button><button data-v="extrema">Extrema</button></div></div>
-<div class="grp"><b>Estilo de juego</b><div class="seg" data-k="sty">
-<button data-v="rusher">Rusher</button><button data-v="balanceado">Balanceado</button><button data-v="franco">Francotirador</button></div></div>
-<div class="grp"><b>Modo de pantalla</b><div class="seg" data-k="dpi">
-<button data-v="0">Sin DPI</button><button data-v="1">Con DPI</button></div>
-<p class="note">Sin DPI usa la densidad original de tu teléfono. Con DPI compensa una densidad cambiada.</p></div>
-<div id="dpiBox" class="grp"><b>DPI de pantalla: <span id="dpiV">420</span></b>
-<input id="dpi" type="range" min="280" max="640" step="10" value="420" aria-label="DPI de pantalla">
-<button class="btn" id="det">Detectar mi pantalla</button></div>
+<input class="inp" id="q" type="search" placeholder="Marca o modelo (ej. HONOR X7)" autocomplete="off" aria-label="Buscar teléfono">
+<div class="sg" id="sg"></div>
+<div id="dev" hidden>
+<p style="margin:8px 0 4px"><b id="dn"></b></p><p class="note" id="di" style="margin:0 0 8px"></p>
+<div class="grp"><b>Gama (corrígela si no coincide con tu versión)</b>
+<select class="inp" id="tr"><option value="1">Gama baja</option><option value="2">Gama baja-media</option><option value="3">Gama media</option><option value="4">Gama media-alta</option><option value="5">Gama alta</option></select>
+<label><input type="checkbox" id="gmg"> Es un teléfono gaming</label></div></div>
+<button class="btn" id="nf">Mi teléfono no aparece</button> <button class="btn" id="rq" hidden>Copiar solicitud</button>
+<p class="note">Catálogo inicial con datos de referencia sin verificar en fuente oficial. Lo que no se conoce queda como desconocido.</p>
 </section>
-
-<h2>TUS VALORES</h2>
-<section class="panel" id="bars" aria-live="polite"></section>
-<p class="note">Ingrésalos en Ajustes › Sensibilidad. Son un punto de partida: en el entrenamiento ajusta de 5 en 5.</p>
-<p style="margin:12px 0 0"><button class="btn hot" id="cp">Copiar valores</button> <span id="cpm" class="note"></span></p>
-
-<h2>TABLA COMPLETA</h2>
-<div class="wrap"><table id="tb"></table></div>
-
-<h2>PRUEBA DE BARRIDO</h2>
+<h2>2 · TU ESTILO</h2>
 <section class="panel">
-<p class="sub" style="margin-top:0">Para tu nivel, un giro de 180° debería necesitar un barrido de <b id="gp">60%</b> del ancho. Practica la distancia en la zona magenta.</p>
-<div class="pad" id="pad" tabindex="0" role="application" aria-label="Zona de práctica de barrido"><div class="goal" id="goal"></div><span>Desliza el pulgar aquí</span></div>
-<p class="res" id="res">Esperando barrido…</p>
+<div class="grp"><b>Dedos con los que juegas</b><div class="seg" id="fg"><button data-f="2">2</button><button data-f="3">3</button><button data-f="4">4</button><button data-f="5">5 o más</button></div></div>
+<div class="grp"><b>Estilos (puedes combinar)</b><div class="seg" id="st"><button data-k="rush">Rush</button><button data-k="cerca">Combate cercano</button><button data-k="media">Media distancia</button><button data-k="lejos">Larga distancia</button><button data-k="franco">Francotirador</button><button data-k="cabeza">Disparos a la cabeza</button><button data-k="retro">Control de retroceso</button></div></div>
+<div class="grp"><b>¿Tus FPS se mantienen estables?</b><div class="seg" id="fp"><button data-p="si">Sí</button><button data-p="no">No</button><button data-p="ns">No sé</button></div></div>
+<button class="btn hot" id="go">Generar recomendación</button>
+<p class="res" id="msg" role="status"></p>
 </section>
-
-<h2>CÓMO APLICARLO</h2>
-<section class="panel">
-<ol>
-<li>Abre Free Fire › Ajustes › Sensibilidad y escribe los seis valores.</li>
-<li>Entra al campo de entrenamiento y haz un giro de 180° con un solo barrido.</li>
-<li>Si necesitas más recorrido que el objetivo, sube 5. Si te pasas de giro, baja 5.</li>
-<li>Repite con punto rojo, 2x, 4x y AWM hasta que apuntes sin corregir.</li>
-</ol>
-<p class="warn"><span class="tag">DPI</span> Cambiar el DPI altera el tamaño de toda la interfaz del teléfono (Opciones de desarrollador › Ancho mínimo). Anota tu valor original para poder volver. El efecto en la sensibilidad varía por equipo, por eso el cálculo es una estimación.</p>
-</section>
+<div id="out" hidden>
+<h2>3 · TU CONFIGURACIÓN</h2>
+<section class="panel"><div id="bars"></div><div id="why"></div><p class="note" id="nt"></p>
+<button class="btn" id="cp">Copiar valores</button> <span class="note" id="cm"></span></section>
+<h2>4 · CALIBRAR</h2>
+<section class="panel"><div class="grp"><b>Prueba estos valores en entrenamiento. ¿Qué notas?</b><select class="inp" id="pb"></select></div>
+<button class="btn hot" id="ap">Aplicar ajuste</button> <button class="btn" id="un">Deshacer</button> <button class="btn" id="rs">Volver al inicio</button>
+<p class="note" id="lg2"></p></section>
+</div>
+<button class="fab" id="fab" aria-expanded="false">Asistente</button>
+<div class="panel" id="bot" hidden><div id="lg" aria-live="polite"></div><div style="display:flex;gap:6px"><input class="inp" id="bi" placeholder="Escribe tu duda…" style="margin:0" aria-label="Mensaje al asistente"><button class="btn" id="bs">Enviar</button></div></div>
 </main>
-<script src="modelos.js"></script>
-<script>
-const N=["General","Punto rojo","Mira 2x","Mira 4x","Mira AWM","Cámara libre"];
-const B={baja:[80,75,70,65,55,80],media:[120,115,105,95,80,115],alta:[165,160,150,140,115,155],extrema:[195,190,180,170,140,185]};
-const S={rusher:[1.06,1.06,1,.95,.9,1.04],balanceado:[1,1,1,1,1,1],franco:[.92,.92,.95,.97,.95,.92]};
-const T={baja:.9,media:.6,alta:.4,extrema:.28};
-const L={baja:"Baja",media:"Media",alta:"Alta",extrema:"Extrema"};
-const st={lv:"media",sty:"balanceado",dpi:"0",val:420,stock:420};
-const $=id=>document.getElementById(id);
-function calc(lv,sty,use,d){const f=use?Math.pow(d/st.stock,.6):1;return B[lv].map((v,i)=>Math.max(1,Math.min(200,Math.round(v*S[sty][i]*f*(st.devF||1)))))}
-function cur(){return calc(st.lv,st.sty,st.dpi==="1",st.val)}
-function render(){
- document.querySelectorAll(".seg").forEach(s=>s.querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(st[s.dataset.k]===b.dataset.v))));
- $("dpiBox").classList.toggle("on",st.dpi==="1");$("dpiV").textContent=st.val;
- const v=cur();
- $("ring").setAttribute("stroke-dasharray",v[0]+" 200");$("bigN").textContent=v[0];
- $("bars").innerHTML=v.map((x,i)=>`<div class="row"><i>${N[i]}</i><div class="track"><u style="width:${x/2}%"></u></div><output>${x}</output></div>`).join("")+`<div class="scale"><span>0</span><span>100</span><span>200</span></div>`;
- let h="<tr><th>Nivel</th><th>Gen</th><th>Rojo</th><th>2x</th><th>4x</th><th>AWM</th><th>Libre</th></tr>";
- [["SIN DPI",0],["CON DPI · "+st.val,1]].forEach(([t,u])=>{h+=`<tr class="sep"><td colspan="7">${t}</td></tr>`;
-  Object.keys(B).forEach(l=>{h+=`<tr class="${l===st.lv&&String(u)===st.dpi?"me":""}"><td>${L[l]}</td>`+calc(l,st.sty,u,st.val).map(n=>`<td>${n}</td>`).join("")+"</tr>"})});
- $("tb").innerHTML=h;
- const g=T[st.lv];$("gp").textContent=Math.round(g*100)+"%";$("goal").style.width=g*100+"%";
-}
-document.querySelectorAll(".seg").forEach(s=>s.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;st[s.dataset.k]=b.dataset.v;render()}));
-$("dpi").addEventListener("input",e=>{st.val=+e.target.value;render()});
-$("det").addEventListener("click",()=>{const d=Math.round((window.devicePixelRatio||2.6)*160/10)*10;st.stock=d;st.val=d;$("dpi").value=Math.min(640,Math.max(280,d));render()});
-$("cp").addEventListener("click",async()=>{const v=cur();const t="Free Fire · "+(st.dev?st.dev.n+" · ":"")+L[st.lv]+" · "+st.sty+(st.dpi==="1"?" · DPI "+st.val:" · sin DPI")+"\n"+N.map((n,i)=>n+": "+v[i]).join("\n");
- try{await navigator.clipboard.writeText(t);$("cpm").textContent="Copiado."}catch(e){$("cpm").textContent="No se pudo copiar. Anótalos desde la lista."}});
-const pad=$("pad");let x0=null;
-pad.addEventListener("pointerdown",e=>{x0=e.clientX;try{pad.setPointerCapture(e.pointerId)}catch(_){}$("res").textContent="Midiendo…"});
-pad.addEventListener("pointerup",e=>{if(x0===null)return;const w=pad.getBoundingClientRect().width,f=Math.abs(e.clientX-x0)/w,g=T[st.lv];x0=null;
- const r=f/g,m=Math.round(f*100)+"% · objetivo "+Math.round(g*100)+"%";
- $("res").textContent=(r<.85?"Corto · ":r>1.15?"Largo · ":"Ideal · ")+m;
- $("res").style.color=r<.85||r>1.15?"var(--am)":"var(--cy)"});
-pad.addEventListener("pointercancel",()=>{x0=null});
-const d0=Math.round((window.devicePixelRatio||2.6)*160/10)*10;st.stock=d0;st.val=d0;$("dpi").value=Math.min(640,Math.max(280,d0));
-render();
-</script>
-<script>(()=>{
-const M=window.MODELOS||{},A=[];
-const nz=s=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9+]/g,"");
-for(const b in M){const p=M[b][0];M[b][1].split("|").forEach(e=>{const q=e.split(",");A.push({b,n:(p+q[0]).trim(),t:+q[1],h:+q[2],z:+(q[3]||1),k:nz(b+" "+p+q[0])})})}
-const G=["","gama baja","gama media","gama media-alta","gama alta"];
-const F=d=>Math.max(.85,Math.min(1.15,(d.h<=60?1.05:d.h<=90?1:d.h<=120?.97:.95)*[0,1.05,1.02,1,.98][d.t]*d.z));
-const dq=$("dq"),db=$("db"),dl=$("dl");
-Object.keys(M).forEach(b=>{const o=document.createElement("option");o.value=b;o.textContent=b;db.appendChild(o)});
-function list(){
- const toks=dq.value.split(/\s+/).map(nz).filter(Boolean),b=db.value;
- if(!toks.length&&!b){dl.hidden=true;return}
- const r=[];for(let i=0;i<A.length&&r.length<60;i++){const d=A[i];if(b&&d.b!==b)continue;if(toks.every(t=>d.k.includes(t)))r.push(i)}
- dl.hidden=false;
- dl.innerHTML=r.length?r.map(i=>`<button data-i="${i}">${A[i].n}<small>${A[i].h} Hz</small></button>`).join(""):"<p>No lo encontré. Prueba con menos letras o elige «Otro / no está».</p>";
-}
-function pick(d){
- st.dev=d;st.devF=d?F(d):1;
- $("dsel").textContent=d?d.n+" · "+d.h+" Hz · "+G[d.t]+". Valores ajustados a tu equipo (estimación).":"Elige tu modelo para ajustar los valores a tu pantalla y procesador.";
- $("dx").hidden=!d;dl.hidden=true;if(d){dq.value="";db.value=""}
- render();
-}
-dq.addEventListener("input",list);db.addEventListener("change",list);
-dl.addEventListener("click",e=>{const b=e.target.closest("button");if(b)pick(A[+b.dataset.i])});
-$("dx").addEventListener("click",()=>pick(null));
-})();</script>
+<div id="chip" hidden></div>
 <script src="config.js"></script>
 <script>window.addEventListener("error",function(e){var m=document.getElementById("gm");if(m){m.style.color="#ffb23d";m.textContent="Error en la página: "+(e.message||"desconocido")}});</script>
-<div id="chip" hidden></div>
+<script>(()=>{
+
+const N=["General","Punto rojo","Mira 2x","Mira 4x","Mira AWM","Cámara libre"];
+const TL=["","Gama baja","Gama baja-media","Gama media","Gama media-alta","Gama alta"];
+const SOC={"Helio G25":1,"Helio G35":1,"Helio P35":1,"Helio G37":1,"Helio G70":1,"Unisoc T606":1,"Unisoc T612":1,"Helio G80":2,"Helio G85":2,"Helio G88":2,"Snapdragon 680":2,"Snapdragon 685":2,"Helio G99":3,"Snapdragon 695":3,"Exynos 1380":3,"Dimensity 1080":4,"Snapdragon 778G":4,"Snapdragon 7+ Gen 2":4,"Tensor G2":4,"Tensor (Pixel 6a)":4,"Snapdragon 8 Gen 1":5,"Snapdragon 8+ Gen 1":5,"Snapdragon 8 Gen 2":5,"Apple A13":5,"Apple A14":5,"Apple A15":5};
+const D=[["Motorola","Moto G72","Helio G99",120],["Motorola","Moto G23","Helio G85",90],["Motorola","Moto G13","Helio G85",90],["Motorola","Moto E13","Unisoc T606",60],["Motorola","Moto G84","Snapdragon 695",120],
+["HONOR","X7","Snapdragon 680",90],["HONOR","X8 (4G)","Snapdragon 680",90],["HONOR","X9a","Snapdragon 695",120],["HONOR","90 GT","Snapdragon 8 Gen 2",144],
+["Samsung","Galaxy A04","Helio P35",60],["Samsung","Galaxy A05s","Snapdragon 680",60],["Samsung","Galaxy A14 4G","Helio G80",90],["Samsung","Galaxy A15","Helio G99",90],["Samsung","Galaxy A24","Helio G99",90],["Samsung","Galaxy A34 5G","Dimensity 1080",120],["Samsung","Galaxy A54 5G","Exynos 1380",120],["Samsung","Galaxy S23","Snapdragon 8 Gen 2",120],
+["Redmi","9A","Helio G25",60],["Redmi","10C","Snapdragon 680",60],["Redmi","12C","Helio G85",60],["Redmi","12","Helio G88",90],["Redmi","Note 11","Snapdragon 680",90],["Redmi","Note 12 4G","Snapdragon 685",120],["Redmi","Note 12 Pro 5G","Dimensity 1080",120],
+["POCO","C65","Helio G85",90],["POCO","M5","Helio G99",90],["POCO","X5 Pro 5G","Snapdragon 778G",120],["POCO","F5","Snapdragon 7+ Gen 2",120],
+["realme","C53","Unisoc T612",90],["realme","C55","Helio G88",90],["realme","9 4G","Snapdragon 680",90],
+["Infinix","Hot 30","Helio G88",90],["Infinix","Hot 40 Pro","Helio G99",120],["Infinix","Note 30","Helio G99",120],["Tecno","Spark 10","Helio G37",90],
+["OPPO","A17","Helio G35",60],["OPPO","A58","Helio G85",90],["vivo","Y22","Helio G70",60],["vivo","Y17s","Helio G85",90],
+["OnePlus","Nord CE 3 Lite","Snapdragon 695",120],["OnePlus","11","Snapdragon 8 Gen 2",120],["Google","Pixel 7","Tensor G2",90],["Google","Pixel 6a","Tensor (Pixel 6a)",60],
+["Apple","iPhone 11","Apple A13",60],["Apple","iPhone 12","Apple A14",60],["Apple","iPhone 13","Apple A15",60],["Apple","iPhone 14","Apple A15",60],
+["ASUS","ROG Phone 6","Snapdragon 8+ Gen 1",165,1],["ASUS","ROG Phone 7","Snapdragon 8 Gen 2",165,1],["Nubia","RedMagic 8 Pro","Snapdragon 8 Gen 2",120,1]];
+const nz=s=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]/g,"");
+function lev(a,b){const m=a.length,n=b.length,d=[];for(let i=0;i<=m;i++)d[i]=[i];for(let j=1;j<=n;j++)d[0][j]=j;for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][n]}
+function sc(q,t){if(t.includes(q))return 100-t.indexOf(q)*.1;if(q.length<3)return 0;let b=9;const L=q.length;for(let w=L-1;w<=L+1;w++)for(let i=0;i+w<=t.length;i++)b=Math.min(b,lev(q,t.slice(i,i+w)));return b<=Math.floor(L/4)+1?80-b*10:0}
+function find(q){q=nz(q);if(q.length<2)return[];return D.map(d=>[Math.max(sc(q,nz(d[0]+d[1])),sc(q,nz(d[1]))),d]).filter(x=>x[0]>0).sort((a,b)=>b[0]-a[0]).slice(0,6).map(x=>x[1])}
+const BASE=[120,115,105,95,80,115];
+const FM={2:1.06,3:1.03,4:1,5:.97};
+const SN={rush:"Rush",cerca:"Combate cercano",media:"Media distancia",lejos:"Larga distancia",franco:"Francotirador",cabeza:"Disparos a la cabeza",retro:"Control de retroceso"};
+const ST={rush:[1.06,1.06,1,.96,.92,1.04],cerca:[1.04,1.05,1.02,.97,.94,1.02],media:[1,1,1,1,1,1],lejos:[.97,.96,.98,1.02,1.02,.98],franco:[.94,.93,.96,1,1.04,.94],cabeza:[1,.95,.96,.97,.97,1],retro:[1,.94,.95,.96,.96,1]};
+const ADJ={pasa:{t:"La mira se pasa de la cabeza al disparar",d:[0,-7,-5,0,0,0]},corta:{t:"La mira se queda corta al subir a la cabeza",d:[0,7,5,0,0,0]},lenta:{t:"Mis giros se sienten lentos",d:[8,0,0,0,0,6]},rapida:{t:"Mis giros se sienten muy rápidos",d:[-8,0,0,0,0,-6]},retro:{t:"Me cuesta controlar el retroceso",d:[0,-5,-5,-3,0,0]},scpasa:{t:"Con 4x o AWM se me pasa",d:[0,0,0,-6,-6,0]},sccorta:{t:"Con 4x o AWM se queda corta",d:[0,0,0,6,6,0]}};
+function calc(f,sty){const v=[],r=[];for(let i=0;i<6;i++){const ms=sty.length?sty.reduce((a,k)=>a+ST[k][i],0)/sty.length:1;const x=Math.max(1,Math.min(200,Math.round(BASE[i]*FM[f]*ms)));v.push(x);r.push(N[i]+": punto de partida "+BASE[i]+" × "+FM[f]+" ("+f+" dedos)"+(sty.length?" × "+ms.toFixed(2)+" (estilo)":"")+" = "+x)}return{v,r}}
+const fmt=d=>d.map((x,i)=>x?N[i]+" "+(x>0?"+":"")+x:"").filter(Boolean).join(", ");
+
+const $=id=>document.getElementById(id);
+let dev=null,cfg=null,fing=0,sty=[],fps="";
+const msg=t=>{$("msg").textContent=t||""};
+const tag=d=>TL[d.tier]+(d.g?" · Gaming":"");
+function info(){$("dn").textContent=(dev.b+" "+dev.m).trim();$("di").textContent=dev.unk?"Datos desconocidos. Elige tú la gama.":dev.soc+" · pantalla "+dev.hz+" Hz (no son los FPS del juego) · "+tag(dev)+" (estimada por el procesador). RAM y variantes: sin confirmar."}
+function setDev(d){dev={b:d[0],m:d[1],soc:d[2],hz:d[3],g:!!d[4],tier:SOC[d[2]]||3};$("dev").hidden=false;$("tr").value=dev.tier;$("gmg").checked=dev.g;$("rq").hidden=true;info()}
+function sugg(){const box=$("sg");box.textContent="";find($("q").value).forEach(d=>{const b=document.createElement("button");b.type="button";b.textContent=d[0]+" "+d[1];b.onclick=()=>{setDev(d);box.textContent="";$("q").value=d[0]+" "+d[1]};box.appendChild(b)})}
+$("q").addEventListener("input",sugg);
+$("q").addEventListener("keydown",e=>{if(e.key==="Enter"){const f=find($("q").value)[0];if(f){setDev(f);$("sg").textContent=""}}});
+$("tr").addEventListener("change",e=>{if(dev){dev.tier=+e.target.value;info()}});
+$("gmg").addEventListener("change",e=>{if(dev){dev.g=e.target.checked;info()}});
+$("nf").addEventListener("click",()=>{dev={b:"",m:$("q").value.trim()||"Mi teléfono",soc:"desconocido",hz:0,g:false,tier:3,unk:true};$("dev").hidden=false;$("tr").value=3;$("gmg").checked=false;$("sg").textContent="";$("rq").hidden=false;info()});
+$("rq").addEventListener("click",async()=>{try{await navigator.clipboard.writeText("Solicitud de dispositivo: "+dev.m);msg("Copiado. Mándaselo al creador para que lo agregue.")}catch(e){msg("No se pudo copiar.")}});
+function seg(id,fn){$(id).addEventListener("click",e=>{const b=e.target.closest("button");if(b)fn(b)})}
+seg("fg",b=>{fing=+b.dataset.f;[...$("fg").children].forEach(x=>x.setAttribute("aria-pressed",String(x===b)))});
+seg("fp",b=>{fps=b.dataset.p;[...$("fp").children].forEach(x=>x.setAttribute("aria-pressed",String(x===b)))});
+seg("st",b=>{const k=b.dataset.k,i=sty.indexOf(k);if(i>-1)sty.splice(i,1);else sty.push(k);b.setAttribute("aria-pressed",String(i<0))});
+$("pb").innerHTML=Object.keys(ADJ).map(k=>'<option value="'+k+'">'+ADJ[k].t+'</option>').join("");
+function render(){
+ $("bars").innerHTML=cfg.v.map((x,i)=>'<div class="row"><i>'+N[i]+'</i><div class="track"><u style="width:'+x/2+'%"></u></div><output>'+x+'</output></div>').join("");
+ $("why").innerHTML='<details><summary>Por qué estos valores</summary><ul>'+cfg.r.map(t=>"<li>"+t+"</li>").join("")+"</ul></details>";
+ $("nt").textContent="Recomendación provisional: son reglas iniciales sin pruebas, no una sensibilidad perfecta. La gama no cambia los valores."+(fps==="no"?" Con FPS inestables, mejora primero el rendimiento y prueba otra vez.":"");
+ $("out").hidden=false}
+$("go").addEventListener("click",()=>{
+ if(!dev)return msg("Primero elige tu teléfono.");
+ if(!fing)return msg("Elige con cuántos dedos juegas.");
+ const c=calc(fing,sty);cfg={base:c.v.slice(),v:c.v.slice(),r:c.r,stack:[]};msg("");$("lg2").textContent="";render();$("out").scrollIntoView({behavior:"smooth"})});
+function apply(k){
+ if(!cfg)return false;const a=ADJ[k],nv=cfg.v.slice();let ch=false;
+ a.d.forEach((x,i)=>{if(!x)return;const lo=Math.max(1,Math.round(cfg.base[i]*.75)),hi=Math.min(200,Math.round(cfg.base[i]*1.25)),y=Math.max(lo,Math.min(hi,cfg.v[i]+x));if(y!==cfg.v[i]){nv[i]=y;ch=true}});
+ if(!ch){$("lg2").textContent="Llegaste al límite de seguridad (±25% del valor inicial). Prueba otro ajuste o vuelve al inicio.";return true}
+ cfg.stack.push(cfg.v.slice());cfg.v=nv;render();$("lg2").textContent="Aplicado: "+fmt(a.d)+". Prueba unas partidas y vuelve a calibrar.";return true}
+$("ap").addEventListener("click",()=>apply($("pb").value));
+$("un").addEventListener("click",()=>{if(cfg&&cfg.stack.length){cfg.v=cfg.stack.pop();render();$("lg2").textContent="Volviste al ajuste anterior."}else $("lg2").textContent="No hay nada que deshacer."});
+$("rs").addEventListener("click",()=>{if(cfg){cfg.v=cfg.base.slice();cfg.stack=[];render();$("lg2").textContent="Valores iniciales restaurados."}});
+$("cp").addEventListener("click",async()=>{const t="Free Fire · "+(dev?(dev.b+" "+dev.m).trim():"")+"\n"+cfg.v.map((x,i)=>N[i]+": "+x).join("\n");try{await navigator.clipboard.writeText(t);$("cm").textContent="Copiado."}catch(e){$("cm").textContent="No se pudo copiar."}});
+/* asistente local */
+const lc=s=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+const EX={general:"General: velocidad de la cámara al girar sin apuntar.",rojo:"Punto rojo: velocidad al apuntar con el punto rojo; influye en subir a la cabeza.",x2:"Mira 2x: lo mismo para esa mira.",x4:"Mira 4x: lo mismo para la mira de 4 aumentos.",awm:"Mira AWM: velocidad con la mira de francotirador.",libre:"Cámara libre: velocidad al mirar alrededor sin mover al personaje."};
+function add(t,u,acts){const d=document.createElement("div");d.className="b"+(u?" u":"");d.textContent=t;(acts||[]).forEach(k=>{const b=document.createElement("button");b.className="btn";b.textContent="Aplicar: "+ADJ[k].t;b.onclick=()=>{apply(k);add("Hecho: "+fmt(ADJ[k].d)+". Pruébalo y cuéntame cómo se siente.")};d.appendChild(b)});$("lg").appendChild(d);$("lg").scrollTop=1e5}
+function intent(l){if(/retroceso/.test(l))return"retro";if(/(awm|4x|franco|sniper)/.test(l)){if(/pasa/.test(l))return"scpasa";if(/corta/.test(l))return"sccorta"}if(/pasa/.test(l))return"pasa";if(/(corta|no llega|no sube)/.test(l))return"corta";if(/lent/.test(l))return"lenta";if(/(rapid|muy sensible)/.test(l))return"rapida";return""}
+function reply(q){
+ const l=lc(q),nq=nz(q),out=[],acts=[];
+ const d=D.slice().sort((a,b)=>(b[0]+b[1]).length-(a[0]+a[1]).length).find(x=>nq.includes(nz(x[0]+x[1]))||(nz(x[1]).length>=4&&nq.includes(nz(x[1]))));
+ if(d){if(!dev||dev.m!==d[1])setDev(d);out.push("Encontré "+d[0]+" "+d[1]+": "+d[2]+", "+tag(dev)+" (estimada por el procesador). RAM y variantes: no las tengo confirmadas.")}
+ const k=intent(l);
+ if(k){out.push("Eso apunta a: "+ADJ[k].t+". Cambio pequeño: "+fmt(ADJ[k].d)+". No toques los demás valores.");if(cfg)acts.push(k);else out.push("Primero genera tu configuración arriba (necesito tus dedos y estilo) y luego aplico el cambio.")}
+ else if(/(que es|para que sirve|como afecta|que hace)/.test(l)){const m=/punto rojo|rojo/.test(l)?"rojo":/2x/.test(l)?"x2":/4x/.test(l)?"x4":/awm/.test(l)?"awm":/libre/.test(l)?"libre":/general/.test(l)?"general":"";out.push(m?EX[m]:"Dime de cuál ajuste: general, punto rojo, 2x, 4x, AWM o cámara libre.")}
+ else if(/dedos|hud/.test(l))out.push("Los dedos cambian el punto de partida un poco. Elígelos arriba en 'Tu estilo'.");
+ if(!out.length)out.push("No tengo datos suficientes para eso. Puedo ayudarte con: tu teléfono, qué hace cada ajuste, y problemas de apuntado (se pasa, se queda corta, lento, rápido, retroceso).");
+ add(out.join(" "),false,acts)}
+function send(){const q=$("bi").value.trim();if(!q)return;$("bi").value="";add(q,true);reply(q)}
+$("bs").addEventListener("click",send);$("bi").addEventListener("keydown",e=>{if(e.key==="Enter")send()});
+$("fab").addEventListener("click",()=>{const o=$("bot").hidden;$("bot").hidden=!o;$("fab").setAttribute("aria-expanded",String(o));if(o&&!$("lg").children.length)add("Hola. Dime tu teléfono y qué notas al apuntar. Si no tengo un dato, te lo digo.")});
+})();</script>
 <script>(()=>{
 const VERIFY_URL=window.VERIFY_URL||"";
 const SECS=300,SK="sc_session",UK="sc_used";
 const g=id=>document.getElementById(id);
 const app=document.getElementById("app"),gate=g("gate"),chip=g("chip");
 let tm=null;
-const OWNER="84bc5f562ad762578a250700e1c4d478ee762cea1829accfc0ca9275448ac51d";
+const OWNER="e9e7c8d6241c36cbeda4156d94614b0385cf4ef663af87eaa7e7cd6ca288f15e";
 async function isOwner(k){try{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(k.toLowerCase()));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,"0")).join("")===OWNER}catch(e){return false}}
 function openOwner(){clearInterval(tm);gate.hidden=true;app.hidden=false;chip.hidden=false;chip.textContent="MODO CREADOR"}
 const ls={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
